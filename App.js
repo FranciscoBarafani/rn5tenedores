@@ -2,6 +2,13 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import UserNavigation from "./app/navigations/User";
 
+//Instalacion de Firebase
+//Importar configuracion de firebase
+import firebaseConfig from "./app/utils/FireBase";
+//Importar modulo de firebase
+import * as firebase from "firebase";
+firebase.initializeApp(firebaseConfig);
+
 export default function App() {
   return (
     <View style={styles.container}>

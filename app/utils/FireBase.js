@@ -1,3 +1,4 @@
+//Configuracion de Firebase
 export default firebaseConfig = {
   apiKey: "AIzaSyDYmMaojke_B4sfsxyLtwTAL-yn81KNx3w",
   authDomain: "tenedores-db426.firebaseapp.com",

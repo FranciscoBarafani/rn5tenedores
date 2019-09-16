@@ -1,13 +1,17 @@
 //Pantalla de Registro
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import t from "tcomb-form-native";
-import { Button } from "react-native-elements";
+import { Button, Text } from "react-native-elements";
 
 //Instanciacion de Componente formulario
 const Form = t.form.Form;
 //Register struct es la estructura del formulario y RegisterOptions son las opciones del formulario
 import { RegisterStruct, RegisterOptions } from "../../forms/Register";
+//Importar Firebase
+import * as firebase from "firebase";
+//Importar Toast
+import Toast, { DURATION } from "react-native-easy-toast";
 
 //Todos los this hacen referencia al componente MyAccountScreen
 export default class MyAccountScreen extends Component {
@@ -23,7 +27,8 @@ export default class MyAccountScreen extends Component {
         email: "",
         password: "",
         passwordConfirmation: ""
-      }
+      },
+      formErrorMessage: ""
     };
   }
   //Funcion para registrar usuario
@@ -33,15 +38,32 @@ export default class MyAccountScreen extends Component {
     if (password == passwordConfirmation) {
       const validate = this.refs.registerForm.getValue();
       if (validate) {
-        console.log("Formulario Correcto");
+        this.setState({ formErrorMessage: "" });
+        //Autenticacion de Usuarios con Firebas
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(validate.email, validate.password)
+          .then(resolve => {
+            //Muestra el Toast (mensaje pop up)
+            this.refs.toast.show("Registro Correcto", 200, () => {
+              this.props.navigation.navigate("MyAccount");
+            });
+          })
+          .catch(err => {
+            this.refs.toast.show("El e-mail ya esta en uso", 2500);
+          });
       } else {
-        console.log("Formulario Invalido");
+        this.setState({
+          formErrorMessage: "Formulario invalido"
+        });
       }
     } else {
-      console.log("Las contraseñas no son iguales");
+      this.setState({
+        formErrorMessage: "Las contraseñas no son iguales"
+      });
     }
-    //Valida el Formulario
   };
+
   //Funcion que actualiza las variables por cada modificacion del input
   onChangeFormRegister = formValue => {
     this.setState({
@@ -52,7 +74,7 @@ export default class MyAccountScreen extends Component {
 
   render() {
     //Asigno la estructura y opciones del formulario importados a MyAccountScreen
-    const { registerStruct, registerOptions } = this.state;
+    const { registerStruct, registerOptions, formErrorMessage } = this.state;
     return (
       <View style={styles.viewBody}>
         <Form
@@ -64,7 +86,21 @@ export default class MyAccountScreen extends Component {
           //un output (lado derecho)
           onChange={formValue => this.onChangeFormRegister(formValue)}
         />
-        <Button title="Unirse" onPress={() => this.register()} />
+        <Button
+          buttonStyle={styles.buttonRegisterContainer}
+          title="Unirse"
+          onPress={() => this.register()}
+        />
+        <Text style={styles.formErrorMessage}>{formErrorMessage}</Text>
+        <Toast //Creacion del Toast
+          ref="toast"
+          position="bottom"
+          positionValue={250}
+          fadeInDuration={750}
+          fadeOutDuration={1000}
+          opacity={0.8}
+          textStyle={{ color: "#fff" }}
+        />
       </View>
     );
   }
@@ -77,5 +113,16 @@ const styles = StyleSheet.create({
     marginLeft: 40,
     marginRight: 40,
     justifyContent: "center"
+  },
+  buttonRegisterContainer: {
+    backgroundColor: "#00A680",
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  formErrorMessage: {
+    color: "#f00",
+    textAlign: "center",
+    marginTop: 30
   }
 });
