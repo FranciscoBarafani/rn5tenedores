@@ -12,6 +12,7 @@ import SearchScreen from "../screens/Search";
 //Screens MyAccount
 import MyAccountScreen from "../screens/MyAccount/MyAccount";
 import RegisterScreen from "../screens/MyAccount/Register";
+import LoginScreen from "../screens/MyAccount/Login";
 
 //Rutas dentro de cada Screen
 const homeScreenStack = createStackNavigator({
@@ -29,6 +30,10 @@ const myAccountScreenStack = createStackNavigator({
   Register: {
     screen: RegisterScreen,
     navigationOptions: ({ navigation }) => ({ title: "Register" })
+  },
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: ({ navigation }) => ({ title: "Login" })
   }
 });
 

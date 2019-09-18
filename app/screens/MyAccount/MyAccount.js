@@ -15,6 +15,7 @@ export default class MyAccountScreen extends Component {
       <View style={styles.viewBody}>
         <Text>MyAccount</Text>
         <Button title="Registro" onPress={() => this.goToScreen("Register")} />
+        <Button title="Login" onPress={() => this.goToScreen("Login")} />
       </View>
     );
   }
