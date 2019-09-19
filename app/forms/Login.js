@@ -5,6 +5,7 @@ import inputTemplate from "./templates/input";
 
 //Estructura de los campos
 export const LoginStruct = t.struct({
+  //Posee los validadores
   email: formValidation.email,
   password: formValidation.password
 });
