@@ -13,9 +13,9 @@ export default class MyAccountScreen extends Component {
   }
 
   //Component Did Mount es Codigo que se ejecuta primero al cargar el screen
-  componentDidMount() {
+  async componentDidMount() {
     //Verifica si estamos logeados en firebase
-    firebase.auth().onAuthStateChanged(user => {
+    await firebase.auth().onAuthStateChanged(user => {
       //Si user no esta vacio realiza la accion
       if (user) {
         //Cambio el estado de logeado a true porque firebase devolvio el token
