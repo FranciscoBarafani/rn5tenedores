@@ -108,6 +108,17 @@ export default class LoginScreen extends Component {
             buttonStyle={styles.buttonLoginContainer}
             onPress={() => this.login()}
           />
+          <Text style={styles.textRegister}>
+            Aun no tienes una cuenta?
+            <Text
+              style={styles.buttonRegister}
+              onPress={() => {
+                this.props.navigation.navigate("Register");
+              }}
+            >
+              Registrate
+            </Text>
+          </Text>
           <Text style={styles.loginErrorMessage}>{loginErrorMessage}</Text>
           <Divider style={styles.divider} />
           <SocialIcon
@@ -154,10 +165,20 @@ const styles = StyleSheet.create({
   loginErrorMessage: {
     color: "red",
     textAlign: "center",
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 20
   },
   divider: {
     backgroundColor: "#00A680",
     marginBottom: 20
+  },
+  textRegister: {
+    marginTop: 15,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  buttonRegister: {
+    color: "#00A680",
+    fontWeight: "bold"
   }
 });

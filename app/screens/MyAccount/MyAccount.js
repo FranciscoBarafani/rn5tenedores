@@ -1,8 +1,11 @@
 //Pantalla de MyAccount
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Button } from "react-native-elements";
 import * as firebase from "firebase";
+
+//Importacion de componentes que funcionan como screens
+import MyAccountGuest from "../../components/MyAccount/MyAccountGuest";
+import MyAccountUser from "../../components/MyAccount/MyAccountUser";
 
 export default class MyAccountScreen extends Component {
   constructor() {
@@ -43,31 +46,10 @@ export default class MyAccountScreen extends Component {
     //Este tipo de variable asigna a login el valor que tiene el state.login del componente
     const { login } = this.state;
     if (login) {
-      return (
-        <View>
-          <Text>Estas Logeado Correctamente..</Text>
-          <Button
-            title="Cerrar Sesion"
-            onPress={() => {
-              this.logOut();
-            }}
-          />
-        </View>
-      );
+      return <MyAccountUser />;
     } else {
-      return (
-        <View style={styles.viewBody}>
-          <Text>MyAccount</Text>
-          <Button
-            title="Registro"
-            onPress={() => this.goToScreen("Register")}
-          />
-          <Button title="Login" onPress={() => this.goToScreen("Login")} />
-        </View>
-      );
+      return <MyAccountGuest goToScreen={this.goToScreen} />;
     }
-
-    //Al hacer click en el botton este activa la funcion goToScreen que nos lleva a la otra pantalla
   }
 }
 

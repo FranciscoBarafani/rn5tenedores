@@ -1,8 +1,8 @@
 //Pantalla de Registro
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import t from "tcomb-form-native";
-import { Button, Text } from "react-native-elements";
+import { Button, Text, Image } from "react-native-elements";
 
 //Instanciacion de Componente formulario
 const Form = t.form.Form;
@@ -77,6 +77,13 @@ export default class MyAccountScreen extends Component {
     const { registerStruct, registerOptions, formErrorMessage } = this.state;
     return (
       <View style={styles.viewBody}>
+        <Image
+          source={require("../../../assets/img/5-tenedores-letras-icono-logo.png")}
+          containerStyle={styles.containerLogo}
+          style={styles.logo}
+          PlaceholderContent={<ActivityIndicator />}
+          resizeMode="contain"
+        />
         <Form
           ref="registerForm"
           type={registerStruct}
@@ -124,5 +131,19 @@ const styles = StyleSheet.create({
     color: "#f00",
     textAlign: "center",
     marginTop: 30
+  },
+  containerLogo: {
+    alignItems: "center",
+    marginBottom: 30
+  },
+  logo: {
+    width: 300,
+    height: 150
+  },
+  buttonLoginContainer: {
+    backgroundColor: "#00A680",
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10
   }
 });
