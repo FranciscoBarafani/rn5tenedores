@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
+import UserInfo from "./UserInfo";
 
 export default class MyAccountUser extends Component {
   constructor(props) {
@@ -8,18 +9,12 @@ export default class MyAccountUser extends Component {
   render() {
     return (
       <View style={styles.viewBody}>
-        <Text>My Account User.. </Text>
+        <UserInfo />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  viewBody: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: 30,
-    paddingRight: 30
-  }
+  viewBody: {}
 });
