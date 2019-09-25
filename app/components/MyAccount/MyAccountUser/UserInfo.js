@@ -3,7 +3,11 @@ import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Avatar } from "react-native-elements";
 import UpdateUserInfo from "./UpdateUserInfo";
-
+import Toast, { Duration } from "react-native-easy-toast";
+//Importacion de Image Picker y permissions de Expo
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+//Importacion de Firebase
 import * as firebase from "firebase";
 
 export default class UserInfo extends Component {
@@ -31,6 +35,31 @@ export default class UserInfo extends Component {
     this.getUserInfo();
   };
 
+  //Funcion para actualizar el email del usuario
+  updateUserEmail = async (newEmail, password) => {
+    this.reauthenticate(password)
+      .then(() => {
+        const user = firebase.auth().currentUser;
+        user
+          .updateEmail(newEmail)
+          .then(() => {
+            this.refs.toast.show(
+              "Email actualizado, vuelve a iniciar sesion",
+              50,
+              () => {
+                firebase.auth().signOut();
+              }
+            );
+          })
+          .catch(err => {
+            this.refs.toast.show(err, 1500);
+          });
+      })
+      .catch(err => {
+        this.refs.toast.show("Tu contraseña no es correcta", 1500);
+      });
+  };
+
   //Trae informacion del usuario logeado con firebase
   getUserInfo = () => {
     const user = firebase.auth().currentUser;
@@ -41,30 +70,108 @@ export default class UserInfo extends Component {
     });
   };
 
-  //Metodo que trae el valor de userInfo
+  //Reautenticacion para poder cambiar el email ya que es necesario ingresar la contraseña
+  //Nuevamente
+  reauthenticate = currentPassword => {
+    const user = firebase.auth().currentUser;
+    const credentials = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      currentPassword
+    );
+    return user.reauthenticateWithCredential(credentials);
+  };
+
+  //Metodo que trae el componente de userInfo pasandole los metodos
   returnUpdateUserInfoComponent = userInfoData => {
     if (userInfoData.hasOwnProperty("uid")) {
       return (
         <UpdateUserInfo
           userInfo={this.state.userInfo}
           updateUserDisplayName={this.updateUserDisplayName}
+          updateUserEmail={this.updateUserEmail}
         />
       );
     }
   };
 
+  //Revisa que el usuario tenga un avatar, sino le asigna uno predeterminado
   checkUserAvatar = photoURL => {
     //Operador ternario, si photoURL existe "?" no hace nada, sino asigna la url ":"
     return photoURL
       ? photoURL
       : "https://api.adorable.io/avatars/285/abott@adorable.png";
   };
+  //Actualiza la imagen del Usuario
+  updateUserPhotoUrl = async photoUri => {
+    const update = {
+      //photoURL es un prop del componente
+      photoURL: photoUri
+    };
+    await firebase.auth().currentUser.updateProfile(update);
+    this.getUserInfo();
+  };
+
+  //Funcion para cambiar la imagen del avatar
+  changeAvatarUser = async () => {
+    //Pregunta si le damos el permiso para acceder a la camara
+    const resultPermission = await Permissions.askAsync(
+      Permissions.CAMERA_ROLL
+    );
+    if (resultPermission.status === "denied") {
+      this.refs.toast.show("Es necesario aceptar los permisos", 1500);
+    } else {
+      //Esta funcion trae como resultado la direccion de la imagen y un par de datos mas
+      //Se utiliza el UID para que cada vez que subamos una imagen reemplaze la anterior
+      //Sino subiria una nueva
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3]
+      });
+      if (result.cancelled) {
+        this.refs.toast.show("Has cerrado la galeria de imagenes", 1500);
+      } else {
+        const { uid } = this.state.userInfo;
+
+        this.uploadImage(result.uri, uid)
+          .then(resolve => {
+            //Esta funcion devuelve la URL de la imagen recientemente subida
+            this.refs.toast.show("Avatar actualizado correctamente", 1500);
+            firebase
+              .storage()
+              .ref("avatar/" + uid)
+              .getDownloadURL()
+              .then(resolve => {
+                this.updateUserPhotoUrl(resolve);
+              })
+              .catch(error => {
+                this.refs.toast.show(
+                  "Error al recuperar el avatar del servidor"
+                );
+              });
+          })
+          .catch(error => {
+            this.refs.toast.show("Error al actualizar Avatar", 1500);
+          });
+      }
+    }
+  };
+
+  //Funcion que sube la imagen seleccionada a Firebase
+  uploadImage = async (uri, nameImage) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    let ref = firebase
+      .storage()
+      .ref()
+      .child("avatar/" + nameImage);
+    return ref.put(blob);
+  };
 
   //Dentro del render se encuentra el componente Update User Info el cual es el menu
   //Para actualizar la informacion del usuario.
   //Tambien le pasamos los props al componente UpdateUserInfo
   render() {
-    const { displayName, email, photoUrl } = this.state.userInfo;
+    const { displayName, email, photoURL } = this.state.userInfo;
     return (
       <View>
         <View style={styles.viewUserInfo}>
@@ -72,9 +179,13 @@ export default class UserInfo extends Component {
             rounded
             size="large"
             source={{
-              uri: this.checkUserAvatar(photoUrl)
+              uri: this.checkUserAvatar(photoURL)
             }}
             containerStyle={styles.userInfoAvatar}
+            showEditButton
+            onEditPress={() => {
+              this.changeAvatarUser();
+            }}
           />
           <View>
             <Text style={styles.displayName}>{displayName}</Text>
@@ -82,6 +193,15 @@ export default class UserInfo extends Component {
           </View>
         </View>
         {this.returnUpdateUserInfoComponent(this.state.userInfo)}
+        <Toast
+          ref="toast"
+          position="bottom"
+          positionValue={250}
+          fadeInDuration={1000}
+          fadeOutDuration={1000}
+          opacity={0.8}
+          textStyle={{ color: "#fff" }}
+        />
       </View>
     );
   }

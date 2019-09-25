@@ -3,32 +3,31 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Overlay, Input, Button, Icon } from "react-native-elements";
 
-export default class OverlayOneInput extends Component {
+export default class OverlayTwoInputs extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      //Trae isVisibleOverlay, placeholder y inputValue como props los cuales se pasan de la
-      //siguiente manera dentro de Update User Info:
-      //<OverlayOneInput
-      //isVisibleOverlay={true}
-      //placeholder={placeholder}
-      //updateFunction={updateFunction}
-      //inputValue={inputValue}
-      ///>
       ...props
     };
   }
 
-  onChangeInput = inputData => {
+  onChangeInputOne = inputData => {
     this.setState({
-      inputValue: inputData
+      inputValueOne: inputData
+    });
+  };
+
+  onChangeInputTwo = inputData => {
+    this.setState({
+      inputValueTwo: inputData
     });
   };
 
   update = () => {
-    const newValue = this.state.inputValue;
-    this.state.updateFunction(newValue);
+    const newValueOne = this.state.inputValueOne;
+    const newValueTwo = this.state.inputValueTwo;
+    this.state.updateFunction(newValueOne, newValueTwo);
     this.setState({
       isVisibleOverlay: false
     });
@@ -42,7 +41,14 @@ export default class OverlayOneInput extends Component {
   };
 
   render() {
-    const { isVisibleOverlay, placeholder, inputValue } = this.state;
+    const {
+      isVisibleOverlay,
+      placeholderOne,
+      placeholderTwo,
+      inputValueOne,
+      inputValueTwo,
+      isPassword
+    } = this.state;
     return (
       <Overlay
         isVisible={isVisibleOverlay}
@@ -52,9 +58,17 @@ export default class OverlayOneInput extends Component {
         <View style={styles.viewOverlay}>
           <Input
             containerStyle={styles.inputContainer}
-            placeholder={placeholder}
-            onChangeText={value => this.onChangeInput(value)}
-            value={inputValue}
+            placeholder={placeholderOne}
+            onChangeText={value => this.onChangeInputOne(value)}
+            value={inputValueOne}
+          />
+          <Input
+            containerStyle={styles.inputContainer}
+            placeholder={placeholderTwo}
+            onChangeText={value => this.onChangeInputTwo(value)}
+            value={inputValueTwo}
+            password={isPassword}
+            secureTextEntry={isPassword}
           />
           <Button
             title="Actualizar"
