@@ -5,11 +5,11 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { Icon } from "react-native-elements";
 
-//Screens
+//Screens Principales
 import HomeScreen from "../screens/Home";
 import TopFiveScreen from "../screens/TopFive";
 import SearchScreen from "../screens/Search";
-//Screens MyAccount
+//Screens de MyAccount
 import MyAccountScreen from "../screens/MyAccount/MyAccount";
 import RegisterScreen from "../screens/MyAccount/Register";
 import LoginScreen from "../screens/MyAccount/Login";
@@ -50,6 +50,7 @@ const topFiveScreenStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({ title: "TopFive" })
   }
 });
+
 //Rutas Global / Instanciacion del BottomTab
 const RootStack = createBottomTabNavigator(
   {
@@ -85,7 +86,7 @@ const RootStack = createBottomTabNavigator(
     Search: {
       screen: searchScreenStack,
       navigationOptions: ({ navigation }) => ({
-        tabBarLabel: "Search",
+        tabBarLabel: "Buscar",
         tabBarIcon: ({ tintColor }) => (
           <Icon
             name="magnify"
@@ -99,7 +100,7 @@ const RootStack = createBottomTabNavigator(
     MyAccount: {
       screen: myAccountScreenStack,
       navigationOptions: ({ navigation }) => ({
-        tabBarLabel: "My Account",
+        tabBarLabel: "Mi Cuenta",
         tabBarIcon: ({ tintColor }) => (
           <Icon
             name="home-outline"
@@ -111,9 +112,10 @@ const RootStack = createBottomTabNavigator(
       })
     }
   },
-  //Configuracion del Tab
+
+  //Configuracion del Tab, Ruta inicial al abrir la aplicacion
   {
-    initialRouteName: "MyAccount",
+    initialRouteName: "Home",
     tabBarOptions: {
       inactiveTintColor: "#646464",
       activeTintColor: "#00a680"

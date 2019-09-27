@@ -5,6 +5,8 @@ import { StyleSheet, View, Text } from "react-native";
 import { ListItem } from "react-native-elements";
 import OverlayOneInput from "../../Elements/OverlayOneInput";
 import OverlayTwoInputs from "../../Elements/OverlayTwoInputs";
+import OverlayThreeInputs from "../../Elements/OverlayThreeInputs";
+import Toast, { Duration } from "react-native-easy-toast";
 
 export default class UpdateUserInfo extends Component {
   constructor(props) {
@@ -53,11 +55,65 @@ export default class UpdateUserInfo extends Component {
           iconColorRight: "#ccc",
           iconNameLeft: "lock-reset",
           iconColorLeft: "#ccc",
-          onPress: () => console.log("Click en boton")
+          onPress: () =>
+            this.openOverlayThreeInputs(
+              "Contraseña actual",
+              "Nueva contraseña",
+              "Repita nueva contraseña",
+              this.updateUserPassword
+            )
         }
       ]
     };
   }
+
+  //Funcion que actualiza el display name
+  updateUserDisplayName = async newDisplayName => {
+    if (newDisplayName) {
+      this.state.updateUserDisplayName(newDisplayName);
+    } else {
+      this.setState({
+        overlayComponent: null
+      });
+    }
+  };
+
+  //Funcion que actualiza el email
+  updateUserEmail = async (newEmail, password) => {
+    const emailOld = this.props.userInfo.email;
+    if (emailOld != newEmail && password) {
+      //Esta funcion updateUserEmail viene en el prop que le fue pasado en UserInfo
+      this.state.updateUserEmail(newEmail, password);
+    }
+    this.setState({
+      overlayComponent: null
+    });
+  };
+  //Funcion que abre overlay
+  updateUserPassword = async (
+    currentPassword,
+    newPassword,
+    repeatNewPassword
+  ) => {
+    if (currentPassword && newPassword && repeatNewPassword) {
+      if (newPassword === repeatNewPassword) {
+        if (newPassword === currentPassword) {
+          this.refs.toast.show(
+            "La nueva contraseña no puede ser igual a la actual"
+          );
+        } else {
+          this.state.updateUserPassword(currentPassword, newPassword);
+        }
+      } else {
+        this.refs.toast.show("Las contraseñas no coinciden");
+      }
+    } else {
+      this.refs.toast.show("Tienes que completar todos los campos");
+    }
+    this.setState({
+      overlayComponent: null
+    });
+  };
 
   //Metodo para abrir el Overlay pasandole un placeholder
   //y la funcion de actualizacion
@@ -74,31 +130,7 @@ export default class UpdateUserInfo extends Component {
     });
   };
 
-  //Funcion que actualiza el display name
-  updateUserDisplayName = async newDisplayName => {
-    if (newDisplayName) {
-      this.state.updateUserDisplayName(newDisplayName);
-    } else {
-      this.setState({
-        overlayComponent: null
-      });
-    }
-  };
-
-  //Funcion que actualiza el email
-  updateUserEmail = async (newEmail, password) => {
-    const emailOld = this.props.userInfo.email;
-    if (emailOld != newEmail) {
-      //Esta funcion updateUserEmail viene en el prop que le fue pasado en UserInfo
-      this.state.updateUserEmail(newEmail, password);
-    }
-    this.setState({
-      overlayComponent: null
-    });
-  };
-
   //Funcion para abrir segundo overlay
-
   openOverlayTwoInputs = (
     placeholderOne,
     placeholderTwo,
@@ -110,11 +142,34 @@ export default class UpdateUserInfo extends Component {
         <OverlayTwoInputs
           isVisibleOverlay={true}
           placeholderOne={placeholderOne}
-          placeholdertwo={placeholderTwo}
+          placeholderTwo={placeholderTwo}
           updateFunction={updateFunction}
           inputValueTwo=""
           inputValueOne={inputValueOne}
           isPassword={true}
+        />
+      )
+    });
+  };
+
+  openOverlayThreeInputs = (
+    placeholderOne,
+    placeholderTwo,
+    placeholderThree,
+    updateFunction
+  ) => {
+    this.setState({
+      overlayComponent: (
+        <OverlayThreeInputs
+          isVisibleOverlay={true}
+          placeholderOne={placeholderOne}
+          placeholderTwo={placeholderTwo}
+          placeholderThree={placeholderThree}
+          inputValueOne=""
+          inputValueTwo=""
+          inputValueThree=""
+          isPassword={true}
+          updateFunction={updateFunction}
         />
       )
     });
@@ -147,6 +202,15 @@ export default class UpdateUserInfo extends Component {
           />
         ))}
         {overlayComponent}
+        <Toast
+          ref="toast"
+          position="center"
+          positionValue={0}
+          fadeInDuration={1000}
+          fadeOutDuration={1000}
+          opacity={0.8}
+          textStyle={{ color: "#fff" }}
+        />
       </View>
     );
   }

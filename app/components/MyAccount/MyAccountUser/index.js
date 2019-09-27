@@ -1,6 +1,6 @@
 //El index se usa como componente principal, se abre automaticamente
 import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 import UserInfo from "./UserInfo";
 
 export default class MyAccountUser extends Component {
@@ -17,5 +17,8 @@ export default class MyAccountUser extends Component {
 }
 
 const styles = StyleSheet.create({
-  viewBody: {}
+  viewBody: {
+    height: "100%",
+    backgroundColor: "#f2f2f2"
+  }
 });

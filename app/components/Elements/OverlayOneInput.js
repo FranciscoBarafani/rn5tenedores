@@ -51,6 +51,7 @@ export default class OverlayOneInput extends Component {
       >
         <View style={styles.viewOverlay}>
           <Input
+            label={placeholder}
             containerStyle={styles.inputContainer}
             placeholder={placeholder}
             onChangeText={value => this.onChangeInput(value)}

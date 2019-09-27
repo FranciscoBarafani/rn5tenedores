@@ -1,7 +1,7 @@
 //Componente que muestra la informacion del usuario dentro del Index
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Avatar } from "react-native-elements";
+import { Avatar, Button } from "react-native-elements";
 import UpdateUserInfo from "./UpdateUserInfo";
 import Toast, { Duration } from "react-native-easy-toast";
 //Importacion de Image Picker y permissions de Expo
@@ -60,6 +60,34 @@ export default class UserInfo extends Component {
       });
   };
 
+  //Funcion que actualiza contraseña
+  updateUserPassword = async (currentPassword, newPassword) => {
+    this.reauthenticate(currentPassword)
+      .then(() => {
+        const user = firebase.auth().currentUser;
+        user
+          .updatePassword(newPassword)
+          .then(() => {
+            this.refs.toast.show(
+              "Contraseña actualizada correctamente,inicia sesion nuevamente",
+              50,
+              () => {
+                firebase.auth().signOut();
+              }
+            );
+          })
+          .catch(() =>
+            this.refs.toast.show("Error del servidor, intente nuevamente", 1500)
+          );
+      })
+      .catch(() => {
+        this.refs.toast.show(
+          "Tu contraseña actual introducida no es correcta",
+          1500
+        );
+      });
+  };
+
   //Trae informacion del usuario logeado con firebase
   getUserInfo = () => {
     const user = firebase.auth().currentUser;
@@ -89,6 +117,7 @@ export default class UserInfo extends Component {
           userInfo={this.state.userInfo}
           updateUserDisplayName={this.updateUserDisplayName}
           updateUserEmail={this.updateUserEmail}
+          updateUserPassword={this.updateUserPassword}
         />
       );
     }
@@ -193,6 +222,13 @@ export default class UserInfo extends Component {
           </View>
         </View>
         {this.returnUpdateUserInfoComponent(this.state.userInfo)}
+        <Button
+          title="Cerrar Sesion"
+          //SI NO PONEMOS EL () => La funcion se ejecuta sin siquiera tocar el boton
+          onPress={() => firebase.auth().signOut()}
+          buttonStyle={styles.btnCloseSession}
+          titleStyle={styles.btnCloseSessionText}
+        />
         <Toast
           ref="toast"
           position="bottom"
@@ -221,5 +257,19 @@ const styles = StyleSheet.create({
   },
   displayName: {
     fontWeight: "bold"
+  },
+  btnCloseSession: {
+    marginTop: 30,
+    borderRadius: 0,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#e3e3e3",
+    borderBottomColor: "#e3e3e3",
+    borderBottomWidth: 1,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  btnCloseSessionText: {
+    color: "#00a680"
   }
 });

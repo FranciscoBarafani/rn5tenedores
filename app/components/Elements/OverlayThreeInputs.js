@@ -67,6 +67,7 @@ export default class OverlayOneInput extends Component {
       >
         <View style={styles.viewOverlay}>
           <Input
+            label={placeholderOne}
             containerStyle={styles.inputContainer}
             placeholder={placeholderOne}
             onChangeText={value => this.onChangeInputOne(value)}
@@ -75,6 +76,7 @@ export default class OverlayOneInput extends Component {
             secureTextEntry={isPassword}
           />
           <Input
+            label={placeholderTwo}
             containerStyle={styles.inputContainer}
             placeholder={placeholderTwo}
             onChangeText={value => this.onChangeInputTwo(value)}
@@ -83,6 +85,7 @@ export default class OverlayOneInput extends Component {
             secureTextEntry={isPassword}
           />
           <Input
+            label={placeholderThree}
             containerStyle={styles.inputContainer}
             placeholder={placeholderThree}
             onChangeText={value => this.onChangeInputThree(value)}
@@ -94,6 +97,7 @@ export default class OverlayOneInput extends Component {
             title="Cambiar Contraseña"
             buttonStyle={styles.buttonUpdate}
             onPress={() => this.update()}
+            e
           />
           <Icon
             containerStyle={styles.containerIconClose}

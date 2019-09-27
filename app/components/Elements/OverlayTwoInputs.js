@@ -57,17 +57,18 @@ export default class OverlayTwoInputs extends Component {
       >
         <View style={styles.viewOverlay}>
           <Input
+            label={placeholderOne}
             containerStyle={styles.inputContainer}
             placeholder={placeholderOne}
             onChangeText={value => this.onChangeInputOne(value)}
             value={inputValueOne}
           />
           <Input
+            label={placeholderTwo}
             containerStyle={styles.inputContainer}
             placeholder={placeholderTwo}
             onChangeText={value => this.onChangeInputTwo(value)}
             value={inputValueTwo}
-            password={isPassword}
             secureTextEntry={isPassword}
           />
           <Button
