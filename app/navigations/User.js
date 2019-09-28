@@ -6,19 +6,24 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { Icon } from "react-native-elements";
 
 //Screens Principales
-import HomeScreen from "../screens/Home";
 import TopFiveScreen from "../screens/TopFive";
 import SearchScreen from "../screens/Search";
 //Screens de MyAccount
 import MyAccountScreen from "../screens/MyAccount/MyAccount";
 import RegisterScreen from "../screens/MyAccount/Register";
 import LoginScreen from "../screens/MyAccount/Login";
-
+//Screens Restaurants
+import RestaurantsScreen from "../screens/Restaurants/Restaurants";
+import AddRestaurantScreen from "../screens/Restaurants/AddRestaurant";
 //Rutas dentro de cada Screen
-const homeScreenStack = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
+const restaurantsScreenStack = createStackNavigator({
+  Resutaurants: {
+    screen: RestaurantsScreen,
     navigationOptions: ({ navigation }) => ({ title: "Home" })
+  },
+  AddRestaurant: {
+    screen: AddRestaurantScreen,
+    navigationOptions: ({ navigation }) => ({ title: "Nuevo Restaurante" })
   }
 });
 
@@ -55,8 +60,8 @@ const topFiveScreenStack = createStackNavigator({
 const RootStack = createBottomTabNavigator(
   {
     //Distintas Opciones del Bottom Tab
-    Home: {
-      screen: homeScreenStack,
+    Restaurants: {
+      screen: restaurantsScreenStack,
       navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
@@ -115,7 +120,7 @@ const RootStack = createBottomTabNavigator(
 
   //Configuracion del Tab, Ruta inicial al abrir la aplicacion
   {
-    initialRouteName: "Home",
+    initialRouteName: "Restaurants",
     tabBarOptions: {
       inactiveTintColor: "#646464",
       activeTintColor: "#00a680"
