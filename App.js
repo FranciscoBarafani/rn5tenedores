@@ -4,10 +4,7 @@ import UserNavigation from "./app/navigations/User";
 
 //Instalacion de Firebase
 //Importar configuracion de firebase
-import firebaseConfig from "./app/utils/FireBase";
-//Importar modulo de firebase
-import * as firebase from "firebase";
-firebase.initializeApp(firebaseConfig);
+import { firebaseApp } from "./app/utils/FireBase";
 
 export default function App() {
   return (

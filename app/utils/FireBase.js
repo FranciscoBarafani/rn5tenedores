@@ -1,5 +1,7 @@
+import firebase from "firebase/app";
+
 //Configuracion de Firebase
-export default firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDYmMaojke_B4sfsxyLtwTAL-yn81KNx3w",
   authDomain: "tenedores-db426.firebaseapp.com",
   databaseURL: "https://tenedores-db426.firebaseio.com",
@@ -8,3 +10,5 @@ export default firebaseConfig = {
   messagingSenderId: "318999971569",
   appId: "1:318999971569:web:a83ad1f55f69b22dc90b50"
 };
+
+export const firebaseApp = firebase.initializeApp(firebaseConfig);

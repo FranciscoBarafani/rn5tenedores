@@ -3,7 +3,7 @@
 import React from "react";
 import t from "tcomb-form-native";
 import formValidation from "../utils/Validation";
-import inputTemplate from "../forms/templates/input";
+import inputTemplate from "../forms/templates/Input";
 
 //Estructura de los campos
 export const RegisterStruct = t.struct({

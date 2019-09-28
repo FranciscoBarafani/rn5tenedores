@@ -1,5 +1,6 @@
 import t from "tcomb-form-native";
-import inputTemplate from "./templates/input";
+import inputTemplate from "./templates/Input";
+import textAreaTemplate from "./templates/TextArea";
 
 export const AddRestaurantStruct = t.struct({
   name: t.String,
@@ -34,6 +35,11 @@ export const AddRestaurantOptions = {
         iconName: "map-marker"
       }
     },
-    description: {}
+    description: {
+      template: textAreaTemplate,
+      config: {
+        placeholder: "Descripcion del Restaurante"
+      }
+    }
   }
 };

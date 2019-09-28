@@ -1,7 +1,7 @@
 import React from "react";
 import t from "tcomb-form-native";
 import formValidation from "../utils/Validation";
-import inputTemplate from "./templates/input";
+import inputTemplate from "./templates/Input";
 
 //Estructura de los campos
 export const LoginStruct = t.struct({
