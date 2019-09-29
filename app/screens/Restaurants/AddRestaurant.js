@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, ScrollView, ActivityIndicator } from "react-native";
-import { Icon, Image, Button, Overlay } from "react-native-elements";
+import { Icon, Image, Button, Overlay, Text } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import Toast, { DURATION } from "react-native-easy-toast";
@@ -36,13 +36,13 @@ export default class AddRestaurant extends Component {
   isImageRestaurant = image => {
     if (image) {
       return (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+        <Image source={{ uri: image }} style={{ width: "100%", height: 200 }} />
       );
     } else {
       return (
         <Image
           source={require("../../../assets/img/no-image-icon-13.jpg")}
-          style={{ width: 200, height: 200 }}
+          style={{ width: "100%", height: 200 }}
         />
       );
     }
@@ -79,9 +79,18 @@ export default class AddRestaurant extends Component {
   addRestaurant = () => {
     const { imageUriRestaurant } = this.state;
     const { name, city, address, description } = this.state.formData;
+
     if (imageUriRestaurant && name && city && address && description) {
+      this.setState({ loading: true });
       db.collection("restaurants")
-        .add({ name, city, address, description, image: "" })
+        .add({
+          name,
+          city,
+          address,
+          description,
+          image: "",
+          createAt: new Date()
+        })
         .then(resolve => {
           const restaurantId = resolve.id;
           uploadImage(imageUriRestaurant, restaurantId, "restaurants")
@@ -92,21 +101,32 @@ export default class AddRestaurant extends Component {
               restaurantRef
                 .update({ image: resolve })
                 .then(() => {
-                  this.refs.toast.show("Restaurante creado correctamente");
+                  this.setState({ loading: false });
+                  this.refs.toast.show(
+                    "Restaurante creado correctamente",
+                    100,
+                    () => {
+                      this.props.navigation.goBack();
+                    }
+                  );
                 })
                 .catch(() => {
                   this.refs.toast.show("Error de servidor, intente mas tarde");
+                  this.setState({ loading: false });
                 });
             })
             .catch(() => {
               this.refs.toast.show("Error de servidor intentelo mas tarde");
+              this.setState({ loading: false });
             });
         })
         .catch(() => {
           this.refs.toast.show("Error de servidor intentelo mas tarde", 1500);
+          this.setState({ loading: false });
         });
     } else {
       this.refs.toast.show("Debes llenar todos los campos", 1500);
+      this.setState({ loading: false });
     }
   };
 
@@ -150,8 +170,8 @@ export default class AddRestaurant extends Component {
           height="auto"
         >
           <View>
-            <Text>Creando Restaurante</Text>
-            <ActivityIndicator size="large" />
+            <Text style={styles.overlayLoadingText}>Creando Restaurante</Text>
+            <ActivityIndicator size="large" color="#00a680" />
           </View>
         </Overlay>
         <Toast
@@ -173,10 +193,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   viewPhoto: {
-    alignItems: "center",
-    justifyContent: "center",
     height: 200,
-    width: 200,
     marginBottom: 20
   },
   viewIconUploadPhoto: {
@@ -196,5 +213,14 @@ const styles = StyleSheet.create({
   btnAddRestaurant: {
     backgroundColor: "#00a680",
     margin: 20
+  },
+  overlayLoading: {
+    padding: 20,
+    borderRadius: 10
+  },
+  overlayLoadingText: {
+    color: "#00a680",
+    marginBottom: 20,
+    fontSize: 20
   }
 });
