@@ -198,7 +198,7 @@ export default class RestaurantsScreen extends Component {
   };
 
   clickRestaurant = restaurant => {
-    console.log(restaurant);
+    this.props.navigation.navigate("Restaurant", { restaurant });
   };
 
   render() {
