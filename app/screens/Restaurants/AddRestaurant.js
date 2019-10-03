@@ -5,18 +5,20 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { uploadImage } from "../../utils/UploadImage";
-
+//Importacion de Firebase
 import { firebaseApp } from "../../utils/FireBase";
 import firebase from "firebase/app";
 import "firebase/firestore";
 const db = firebase.firestore(firebaseApp);
-
+//Importacion y configuracion del Form
 import t from "tcomb-form-native";
 const Form = t.form.Form;
 import {
   AddRestaurantStruct,
   AddRestaurantOptions
 } from "../../forms/AddRestaurant";
+//Importacion de componente para evitar tapar el input
+import { KeyboardAvoidingView } from "react-native";
 
 export default class AddRestaurant extends Component {
   constructor(props) {
@@ -136,54 +138,56 @@ export default class AddRestaurant extends Component {
 
     return (
       <ScrollView style={styles.viewBody}>
-        <View style={styles.viewPhoto}>
-          {this.isImageRestaurant(imageUriRestaurant)}
-        </View>
-        <View>
-          <Form
-            ref="addRestaurantForm"
-            type={AddRestaurantStruct}
-            options={AddRestaurantOptions}
-            value={this.state.formData}
-            onChange={formValue => this.onChangeFormAddRestaurant(formValue)}
-          />
-        </View>
-        <View style={styles.viewIconUploadPhoto}>
-          <Icon
-            name="camera"
-            type="material-community"
-            color="#7A7A7A"
-            iconStyle={styles.addPhotoIcon}
-            onPress={() => this.uploadImage()}
-          />
-        </View>
-        <View style={styles.viewButtonAddRestaurant}>
-          <Button
-            buttonStyle={styles.btnAddRestaurant}
-            title="Crear Restaurante"
-            onPress={() => this.addRestaurant()}
-          />
-        </View>
-        <Overlay
-          overlayStyle={styles.overlayLoading}
-          isVisible={loading}
-          width="auto"
-          height="auto"
-        >
-          <View>
-            <Text style={styles.overlayLoadingText}>Creando Restaurante</Text>
-            <ActivityIndicator size="large" color="#00a680" />
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.viewPhoto}>
+            {this.isImageRestaurant(imageUriRestaurant)}
           </View>
-        </Overlay>
-        <Toast
-          ref="toast"
-          position="bottom"
-          positionValue={320}
-          fadeInDuration={1000}
-          fadeOutDuration={1000}
-          opacity={0.8}
-          textStyle={{ color: "#fff" }}
-        />
+          <View>
+            <Form
+              ref="addRestaurantForm"
+              type={AddRestaurantStruct}
+              options={AddRestaurantOptions}
+              value={this.state.formData}
+              onChange={formValue => this.onChangeFormAddRestaurant(formValue)}
+            />
+          </View>
+          <View style={styles.viewIconUploadPhoto}>
+            <Icon
+              name="camera"
+              type="material-community"
+              color="#7A7A7A"
+              iconStyle={styles.addPhotoIcon}
+              onPress={() => this.uploadImage()}
+            />
+          </View>
+          <View style={styles.viewButtonAddRestaurant}>
+            <Button
+              buttonStyle={styles.btnAddRestaurant}
+              title="Crear Restaurante"
+              onPress={() => this.addRestaurant()}
+            />
+          </View>
+          <Overlay
+            overlayStyle={styles.overlayLoading}
+            isVisible={loading}
+            width="auto"
+            height="auto"
+          >
+            <View>
+              <Text style={styles.overlayLoadingText}>Creando Restaurante</Text>
+              <ActivityIndicator size="large" color="#00a680" />
+            </View>
+          </Overlay>
+          <Toast
+            ref="toast"
+            position="bottom"
+            positionValue={320}
+            fadeInDuration={1000}
+            fadeOutDuration={1000}
+            opacity={0.8}
+            textStyle={{ color: "#fff" }}
+          />
+        </KeyboardAvoidingView>
       </ScrollView>
     );
   }

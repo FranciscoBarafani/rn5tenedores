@@ -1,6 +1,6 @@
 //El index se usa como componente principal, se abre automaticamente
 import React, { Component } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, ScrollView, Text, Button } from "react-native";
 import UserInfo from "./UserInfo";
 
 export default class MyAccountUser extends Component {
@@ -9,9 +9,12 @@ export default class MyAccountUser extends Component {
   }
   render() {
     return (
-      <View style={styles.viewBody}>
+      <ScrollView
+        style={styles.viewBody}
+        contentContainerStyle={styles.viewBodyContainer}
+      >
         <UserInfo />
-      </View>
+      </ScrollView>
     );
   }
 }

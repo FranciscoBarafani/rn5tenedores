@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView
+} from "react-native";
 import { Image, Button, SocialIcon, Divider } from "react-native-elements";
 //Importacion de tcomb
 import t from "tcomb-form-native";
@@ -88,7 +94,7 @@ export default class LoginScreen extends Component {
     const { loginStruct, loginOptions, loginErrorMessage } = this.state;
 
     return (
-      <View style={styles.viewBody}>
+      <ScrollView style={styles.viewBody}>
         <Image
           source={require("../../../assets/img/5-tenedores-letras-icono-logo.png")}
           style={styles.logo}
@@ -137,7 +143,7 @@ export default class LoginScreen extends Component {
           opacity={0.8}
           textStyle={{ color: "#fff" }}
         />
-      </View>
+      </ScrollView>
     );
   }
 }

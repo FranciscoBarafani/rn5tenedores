@@ -57,8 +57,6 @@ export default class MyAccountScreen extends Component {
 const styles = StyleSheet.create({
   viewBody: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: "#fff"
   }
 });
