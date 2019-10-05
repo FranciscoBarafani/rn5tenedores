@@ -17,6 +17,9 @@ import RestaurantsScreen from "../screens/Restaurants/Restaurants";
 import AddRestaurantScreen from "../screens/Restaurants/AddRestaurant";
 import RestaurantScreen from "../screens/Restaurants/Restaurant";
 import AddReviewRestaurantScreen from "../screens/Restaurants/AddReviewRestaurant";
+//Map Screen
+import MapScreen from "../screens/Map/Map";
+
 //Rutas dentro de cada Screen
 const restaurantsScreenStack = createStackNavigator({
   Resutaurants: {
@@ -38,6 +41,13 @@ const restaurantsScreenStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: navigation.state.params.name
     })
+  }
+});
+
+const mapScreenStack = createStackNavigator({
+  Map: {
+    screen: MapScreen,
+    navigationOptions: ({ navigation }) => ({ title: "Mapa" })
   }
 });
 
@@ -95,6 +105,20 @@ const RootStack = createBottomTabNavigator(
         tabBarIcon: ({ tintColor }) => (
           <Icon
             name="star-outline"
+            type="material-community"
+            size={22}
+            color={tintColor}
+          />
+        )
+      })
+    },
+    Map: {
+      screen: mapScreenStack,
+      navigationOptions: ({ navigation }) => ({
+        tabBarLabel: "Mapa",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon
+            name="map-outline"
             type="material-community"
             size={22}
             color={tintColor}

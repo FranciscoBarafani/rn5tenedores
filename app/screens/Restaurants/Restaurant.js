@@ -13,7 +13,8 @@ import {
   Button,
   Text,
   Rating,
-  Avatar
+  Avatar,
+  Divider
 } from "react-native-elements";
 import Toast, { DURATION } from "react-native-easy-toast";
 import firebaseApp from "../../utils/FireBase";
@@ -255,6 +256,7 @@ export default class RestaurantScreen extends Component {
         </View>
         <View style={styles.viewBtnAddReview}>
           {this.loadButtonAddReview()}
+          <Divider style={styles.dividerStyle} />
           <Text style={styles.reviewComment}>Comentarios</Text>
           {this.renderFlatList(reviews)}
         </View>
@@ -352,7 +354,13 @@ const styles = StyleSheet.create({
   reviewComment: {
     fontSize: 20,
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 10
+  },
+  dividerStyle: {
+    height: 2,
+    backgroundColor: "grey",
+    marginTop: 20,
+    opacity: 0.5
   }
 });

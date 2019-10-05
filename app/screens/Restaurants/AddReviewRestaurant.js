@@ -51,10 +51,27 @@ export default class AddReviewRestaurantScreen extends Component {
         db.collection("reviews")
           .add(data)
           .then(() => {
-            this.setState({ loading: false });
-            this.refs.toast.show("Review enviada correctamente", 50, () => {
-              this.props.navigation.state.params.loadReview();
-              this.props.navigation.goBack();
+            const restaurantRef = db
+              .collection("restaurants")
+              .doc(this.props.navigation.state.params.id);
+            restaurantRef.get().then(response => {
+              const restaurantData = response.data();
+              const ratingTotal = restaurantData.ratingTotal + ratingValue;
+              const quantityVoting = restaurantData.quantityVoting + 1;
+              const rating = ratingTotal / quantityVoting;
+              restaurantRef
+                .update({ rating, ratingTotal, quantityVoting })
+                .then(() => {
+                  this.setState({ loading: false });
+                  this.refs.toast.show(
+                    "Review enviada correctamente",
+                    50,
+                    () => {
+                      this.props.navigation.state.params.loadReview();
+                      this.props.navigation.goBack();
+                    }
+                  );
+                });
             });
           })
           .catch(() => {
